@@ -1,28 +1,24 @@
 package org.example;
 
+import jakarta.websocket.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URI;
+import java.nio.ByteBuffer;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 
 @SpringBootApplication
 public class ImageSenderApplication implements CommandLineRunner {
-
-    // Nazwy 12 odprowadzeń EKG (opcjonalnie do opisu plików)
-    private static final String[] LEAD_NAMES = {
-            "I", "II", "III",
-            "aVR", "aVL", "aVF",
-            "V1", "V2", "V3", "V4", "V5", "V6"
-    };
 
     public static void main(String[] args) {
         SpringApplication.run(ImageSenderApplication.class, args);
@@ -30,134 +26,58 @@ public class ImageSenderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 1. Adres serwera (endpoint)
-        String serverUrl = "http://localhost:9090/process";
-        // Zmień, jeśli Twój serwer nasłuchuje na innym porcie/ścieżce
+        String websocketUrl = "ws://localhost:9998/ws";
+        String imagePath = "src/main/java/org/example/test2.png";
 
-        // 2. Plik .png do wysłania
-        String path = "src/main/java/org/example/test2.png"; // Zmień w razie potrzeby
-        File file = new File(path);
-        if (!file.exists()) {
-            System.err.println("Brak pliku: " + file.getAbsolutePath());
+        File imageFile = new File(imagePath);
+        if (!imageFile.exists()) {
+            System.err.println("❌ Brak pliku: " + imageFile.getAbsolutePath());
             return;
         }
 
-        // 3. Wczytanie do byte[]
-        byte[] imageBytes = loadFile(file);
-        if (imageBytes == null || imageBytes.length == 0) {
-            System.err.println("Nie udało się odczytać pliku: " + path);
+        byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+
+        System.out.println("🔌 Łączenie z WebSocket: " + websocketUrl);
+        WebSocketClient client = new WebSocketClient(websocketUrl);
+
+        System.out.println("📤 Wysyłam dane...");
+        client.sendMessage(imageBytes, client.getSession());
+
+        byte[] response = client.waitForResponse();
+        if (response == null) {
+            System.err.println("⚠️ Brak odpowiedzi od serwera!");
             return;
         }
 
-        // 4. Tworzymy obiekt requestu z polem fileBytes (typu Byte[])
-        FileRequest req = new FileRequest();
-        req.pngBytes = new Byte[imageBytes.length];
-        for (int i = 0; i < imageBytes.length; i++) {
-            req.pngBytes[i] = imageBytes[i]; // autoboxing (byte -> Byte)
-        }
-
-        // 5. Wysyłamy do /process (Spring użyje Jacksona do serializacji 'req' w JSON)
-        RestTemplate restTemplate = new RestTemplate();
-        // Odbieramy tablicę CompressedBitmap (zdeserializowaną przez Jackson)
-        CompressedBitmap[] responseArr = restTemplate.postForObject(
-                serverUrl,
-                req,
-                CompressedBitmap[].class
-        );
-
-        if (responseArr == null) {
-            System.err.println("Otrzymano pustą odpowiedź z serwera!");
-            return;
-        }
-        System.out.println("Otrzymano odpowiedź z serwera. Liczba sub-obszarów: " + responseArr.length);
-
-        // 6. Przetwarzamy każdy CompressedBitmap -> boolean[][] -> zapis .png i .txt
-        for (int i = 0; i < responseArr.length; i++) {
-            CompressedBitmap cb = responseArr[i];
-            boolean[][] matrix = decompressToBooleanMatrix(cb.width, cb.height, cb.data);
-
-            // Nazwy plików
-            String leadName = (i < LEAD_NAMES.length) ? LEAD_NAMES[i] : ("lead_" + (i+1));
-            String pngFile = "output_" + leadName + ".png";
-            String txtFile = "output_" + leadName + ".txt";
-
-            saveToPng(matrix, pngFile);
-            saveToTxt(matrix, txtFile);
-
-            System.out.println("Zapisano: " + pngFile + ", " + txtFile);
-        }
-
-        System.out.println("Wykonano wysyłanie pliku i zapis sub-obszarów.");
+        System.out.println("✅ Otrzymano odpowiedź. Długość: " + response.length);
+        System.out.println("📂 Odpowiedź: " + Arrays.toString(response));
     }
 
     /**
      * Wczytuje plik do tablicy bajtów.
      */
     private byte[] loadFile(File file) throws IOException {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            byte[] data = new byte[(int) file.length()];
-            int read = fis.read(data);
-            if (read != data.length) {
-                return null;
-            }
-            return data;
-        }
+        return java.nio.file.Files.readAllBytes(file.toPath());
     }
 
     /**
-     * Dekompresja int[] -> boolean[][] (32 bity na int).
+     * Przetwarza odpowiedź binarną od serwera i zapisuje jako PNG.
      */
-    private boolean[][] decompressToBooleanMatrix(int width, int height, int[] data) {
-        boolean[][] matrix = new boolean[height][width];
+    private void processResponse(ByteBuffer buffer) {
+        try {
+            byte[] data = new byte[buffer.remaining()];
+            buffer.get(data);
 
-        int bitIndex = 0;
-        int intIndex = 0;
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (bitIndex == 32) {
-                    bitIndex = 0;
-                    intIndex++;
-                }
-                int currentInt = data[intIndex];
-                boolean isTrue = ((currentInt >>> bitIndex) & 1) == 1;
-                matrix[y][x] = isTrue;
-
-                bitIndex++;
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+            if (image != null) {
+                ImageIO.write(image, "png", new File("output_result.png"));
+                System.out.println("💾 Zapisano wynik: output_result.png");
+            } else {
+                System.err.println("⚠️ Błąd dekodowania obrazu!");
             }
-        }
-        return matrix;
-    }
-
-    /**
-     * Zapis boolean[][] do .png (true->czarny, false->biały).
-     */
-    private void saveToPng(boolean[][] matrix, String fileName) throws IOException {
-        int h = matrix.length;
-        int w = matrix[0].length;
-
-        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                image.setRGB(x, y, matrix[y][x] ? Color.BLACK.getRGB() : Color.WHITE.getRGB());
-            }
-        }
-        ImageIO.write(image, "png", new File(fileName));
-    }
-
-    /**
-     * Zapis boolean[][] do pliku .txt w postaci ciągów 0/1 dla każdego wiersza.
-     */
-    private void saveToTxt(boolean[][] matrix, String fileName) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-            for (boolean[] row : matrix) {
-                StringBuilder sb = new StringBuilder(row.length);
-                for (boolean b : row) {
-                    sb.append(b ? '1' : '0');
-                }
-                bw.write(sb.toString());
-                bw.newLine();
-            }
+        } catch (IOException e) {
+            System.err.println("❌ Błąd zapisu odpowiedzi: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
