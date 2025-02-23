@@ -5,45 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b61cd632-96f6-4669-a7d1-3b5f0e3d137e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/WebSocketClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_I.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_I.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_II.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_II.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_III.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_III.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V2.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V3.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V4.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V5.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_V6.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_aVF.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_aVF.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_aVL.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_aVL.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_aVR.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_aVR.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_lead_13.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_lead_14.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_lead_15.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_lead_16.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/CompressedBitmap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/CompressedBitmap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/FileRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImageRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ImageSenderApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ImageSenderApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/test.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/test.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/WebSocketClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/WebSocketClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,8 +72,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
-        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+        <option value="bundled-jdk-9823dce3aa75-e9a9b764149b-intellij.indexing.shared.core-IU-251.21418.62" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a163169533b-JavaScript-IU-251.21418.62" />
       </set>
     </attachedChunks>
   </component>
@@ -124,6 +88,7 @@
       <workItem from="1739989966467" duration="15449000" />
       <workItem from="1740049881684" duration="3515000" />
       <workItem from="1740053448713" duration="4694000" />
+      <workItem from="1740307626996" duration="3017000" />
     </task>
     <servers />
   </component>

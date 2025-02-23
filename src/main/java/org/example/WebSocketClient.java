@@ -116,6 +116,8 @@ public class WebSocketClient {
 
         for (int i = 0; i < numImages; i++) {
             // Odczyt parametrów obrazu
+            int smallPx = buffer.getInt();
+            System.out.println("Px na kratkę: " + (double)smallPx/1000000.0);
             int width = buffer.getInt();
             int height = buffer.getInt();
             int n = buffer.getInt(); // liczba intów z danymi bitmapy
