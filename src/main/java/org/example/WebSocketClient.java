@@ -24,8 +24,8 @@ public class WebSocketClient {
 
     public WebSocketClient(String serverUri) throws Exception {
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-        container.setDefaultMaxBinaryMessageBufferSize(15 * 1024 * 1024); // 15 MB
-        container.setDefaultMaxTextMessageBufferSize(15 * 1024 * 1024); // 15 MB
+        container.setDefaultMaxBinaryMessageBufferSize(20 * 1024 * 1024);
+        container.setDefaultMaxTextMessageBufferSize(20 * 1024 * 1024);
         container.connectToServer(this, new URI(serverUri));
     }
 
@@ -74,7 +74,7 @@ public class WebSocketClient {
 
         // Reszta danych bez wymiarów
         byte[] imageBytes = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        final int CHUNK_SIZE = 8 * 1024; // 8 KB
+        final int CHUNK_SIZE = 20 * 1024 * 1024; // 20 MB max
 
         for (int i = 0; i < imageBytes.length; i += CHUNK_SIZE) {
             int end = Math.min(imageBytes.length, i + CHUNK_SIZE);
