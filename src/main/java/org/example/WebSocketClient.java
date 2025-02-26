@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import jakarta.websocket.Session;
 import java.awt.image.BufferedImage;
 
+import static java.lang.System.exit;
+
 @ClientEndpoint
 public class WebSocketClient {
 
@@ -152,5 +154,6 @@ public class WebSocketClient {
                 System.err.println("Błąd zapisu obrazu " + fileName + ": " + e.getMessage());
             }
         }
+        exit(0);
     }
 }

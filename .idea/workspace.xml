@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b61cd632-96f6-4669-a7d1-3b5f0e3d137e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/WebSocketClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/WebSocketClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +22,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -72,8 +74,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-e9a9b764149b-intellij.indexing.shared.core-IU-251.21418.62" />
-        <option value="bundled-js-predefined-d6986cc7102b-6a163169533b-JavaScript-IU-251.21418.62" />
+        <option value="bundled-jdk-9823dce3aa75-f9f52b72c171-intellij.indexing.shared.core-IU-251.22821.72" />
+        <option value="bundled-js-predefined-d6986cc7102b-7af238ef196b-JavaScript-IU-251.22821.72" />
       </set>
     </attachedChunks>
   </component>
@@ -89,6 +91,7 @@
       <workItem from="1740049881684" duration="3515000" />
       <workItem from="1740053448713" duration="4694000" />
       <workItem from="1740307626996" duration="3017000" />
+      <workItem from="1740594512493" duration="1163000" />
     </task>
     <servers />
   </component>
