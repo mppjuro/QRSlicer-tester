@@ -1,6 +1,5 @@
 package org.example;
 
-import jakarta.websocket.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URI;
 import java.nio.ByteBuffer;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,38 +27,32 @@ public class ImageSenderApplication implements CommandLineRunner {
 
         File imageFile = new File(imagePath);
         if (!imageFile.exists()) {
-            System.err.println("❌ Brak pliku: " + imageFile.getAbsolutePath());
+            System.err.println("Brak pliku: " + imageFile.getAbsolutePath());
             return;
         }
 
         byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
 
-        System.out.println("🔌 Łączenie z WebSocket: " + websocketUrl);
+        System.out.println("Łączenie z WebSocket: " + websocketUrl);
         WebSocketClient client = new WebSocketClient(websocketUrl);
 
-        System.out.println("📤 Wysyłam dane...");
+        System.out.println("Wysyłam dane...");
         client.sendMessage(imageBytes, client.getSession());
 
         byte[] response = client.waitForResponse();
         if (response == null) {
-            System.err.println("⚠️ Brak odpowiedzi od serwera!");
+            System.err.println("Brak odpowiedzi od serwera!");
             return;
         }
 
-        System.out.println("✅ Otrzymano odpowiedź. Długość: " + response.length);
-        System.out.println("📂 Odpowiedź: " + Arrays.toString(response));
+        System.out.println("Otrzymano odpowiedź. Długość: " + response.length);
+        System.out.println("Odpowiedź: " + Arrays.toString(response));
     }
 
-    /**
-     * Wczytuje plik do tablicy bajtów.
-     */
     private byte[] loadFile(File file) throws IOException {
         return java.nio.file.Files.readAllBytes(file.toPath());
     }
 
-    /**
-     * Przetwarza odpowiedź binarną od serwera i zapisuje jako PNG.
-     */
     private void processResponse(ByteBuffer buffer) {
         try {
             byte[] data = new byte[buffer.remaining()];
@@ -71,12 +61,12 @@ public class ImageSenderApplication implements CommandLineRunner {
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
             if (image != null) {
                 ImageIO.write(image, "png", new File("output_result.png"));
-                System.out.println("💾 Zapisano wynik: output_result.png");
+                System.out.println("Zapisano wynik: output_result.png");
             } else {
-                System.err.println("⚠️ Błąd dekodowania obrazu!");
+                System.err.println("Błąd dekodowania obrazu!");
             }
         } catch (IOException e) {
-            System.err.println("❌ Błąd zapisu odpowiedzi: " + e.getMessage());
+            System.err.println("Błąd zapisu odpowiedzi: " + e.getMessage());
             e.printStackTrace();
         }
     }

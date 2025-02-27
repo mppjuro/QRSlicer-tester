@@ -31,13 +31,13 @@ public class WebSocketClient {
 
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("✅ Połączono z serwerem WebSocket!");
+        System.out.println("Połączono z serwerem WebSocket!");
         this.session = session;
     }
 
     @OnMessage
     public void onMessage(ByteBuffer message) {
-        System.out.println("📩 Otrzymano odpowiedź od serwera!");
+        System.out.println("Otrzymano odpowiedź od serwera!");
         response = new byte[message.remaining()];
         message.get(response);
         latch.countDown();
@@ -45,21 +45,15 @@ public class WebSocketClient {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        System.out.println("❌ Połączenie zamknięte: " + reason);
+        System.out.println("Połączenie zamknięte: " + reason);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.err.println("⚠️ Błąd WebSocket: " + throwable.getMessage());
+        System.err.println("Błąd WebSocket: " + throwable.getMessage());
     }
 
-    /**
-     * Wysyła obraz w postaci fragmentów. Pierwszy fragment zawiera wymiary obrazu.
-     *
-     * @param data    bajty obrazu w formacie PNG
-     * @param session aktywna sesja WebSocket
-     * @throws IOException gdy wystąpi problem z odczytem obrazu lub wysyłką
-     */
+    // Wysyła obraz w postaci fragmentów. Pierwszy fragment zawiera dodatkowo wymiary obrazu
     public void sendMessage(byte[] data, Session session) throws IOException {
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
         int width = image.getWidth();
@@ -81,7 +75,7 @@ public class WebSocketClient {
             ByteBuffer chunk = ByteBuffer.wrap(imageBytes, i, end - i);
             session.getAsyncRemote().sendBinary(chunk);
         }
-
+        // Zakończenie komunikacji, sygnał, żeby serwer zaczął analizować dane
         session.getAsyncRemote().sendText("KONIEC");
     }
 
@@ -96,7 +90,6 @@ public class WebSocketClient {
         return response;
     }
     private void processResponse(ByteBuffer buffer) {
-        // Upewnij się, że folder "ekg" istnieje
         File folder = new File("ekg");
         if (!folder.exists()) {
             folder.mkdirs();
@@ -117,22 +110,19 @@ public class WebSocketClient {
         };
 
         for (int i = 0; i < numImages; i++) {
-            // Odczyt parametrów obrazu
             int smallPx = buffer.getInt();
             System.out.println("Px na kratkę: " + (double)smallPx/1000000.0);
             int width = buffer.getInt();
             int height = buffer.getInt();
-            int n = buffer.getInt(); // liczba intów z danymi bitmapy
+            int n = buffer.getInt(); // liczba intów ze skompresowanymi danymi bitmapy
 
-            // Odczyt danych bitmapy
             int[] imageData = new int[n];
             for (int j = 0; j < n; j++) {
                 imageData[j] = buffer.getInt();
             }
 
-            // Utwórz obraz w trybie czarno-białym
+            // Utwórz obraz czarno-biały, 1 int to 32 px (32 bity)
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
-            // Dla każdego piksela obliczamy, w którym int'ie i pod jakim offset'cie się znajduje
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     int bitIndex = y * width + x;
@@ -144,7 +134,6 @@ public class WebSocketClient {
                 }
             }
 
-            // Określenie nazwy pliku (jeśli liczba obrazów jest mniejsza niż 12, nadajemy domyślną nazwę)
             String fileName = (i < fileNames.length) ? fileNames[i] : ("chart_" + i + ".png");
             File outputFile = new File(folder, fileName);
             try {
